@@ -1,0 +1,79 @@
+﻿@model PizzaToDo.Controllers.ViewModels.TasksListViewModel
+@{
+    ViewBag.Title = "Pizza 2015";
+}
+
+<div class="row">
+    <form asp-controller="Tasks" asp-action="Add" method="POST" asp-anti-forgery="true" id="add-item" class="form-horizontal" role="form">
+        <fieldset>
+            <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="new-task-textinput" asp-for="NewTask"></label>
+                <div class="col-md-4">
+                    <input id="new-task-textinput" asp-for="NewTask" class="form-control input-md"/>
+                    <span asp-validation-for="NewTask" class="text-danger"></span>
+                </div>
+                <div class="col-md-2">
+                    <button id="singlebutton" name="singlebutton" type="submit" class="btn btn-primary">+</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<div class="row">
+    <div class="list-group">
+        @foreach (var item in Model.ToDoElements.Where(task => !task.CompletedDate.HasValue))
+        {
+            <div class="list-group-item">
+                <form asp-controller="Tasks" asp-action="Delete" method="POST" asp-route-id="@item.Id" asp-anti-forgery="true" class="badge"
+                      id="delete-item-@item.Id">
+                    <a href="javascript:document.getElementById('delete-item-@item.Id').submit()">
+                        <i class="fa fa-trash fa-2x"></i>
+                    </a>
+                </form>
+
+                <form asp-controller="Tasks" asp-action="Complete" method="POST" asp-route-id="@item.Id" asp-anti-forgery="true" class="badge"
+                      id="complete-item-@item.Id">
+                    <a href="javascript:document.getElementById('complete-item-@item.Id').submit()">
+                        <i class="fa fa-check-circle-o fa-2x"></i>
+                    </a>
+                </form>
+
+                <h4 class="list-group-item-heading">@item.Content</h4>
+                <p class="list-group-item-text" asp-format="{0:yyyy-MM-dd}">@item.AddDate</p>
+            </div>
+        }
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="list-group">
+        @foreach (var item in Model.ToDoElements.Where(task => task.CompletedDate.HasValue))
+        {
+            <div class="list-group-item disabled">
+                <form asp-controller="Tasks" asp-action="Delete" method="POST" asp-route-id="@item.Id" asp-anti-forgery="true" class="badge"
+                      id="delete-item-@item.Id">
+                    <a href="javascript:document.getElementById('delete-item-@item.Id').submit()">
+                        <i class="fa fa-trash fa-2x"></i>
+                    </a>
+                </form>
+
+                <h4 class="list-group-item-heading">@item.Content</h4>
+                <p class="list-group-item-text" asp-format="{0:yyyy-MM-dd}">@("Dodane: {item.AddDate, 5}, ukończone: {item.CompletedDate.Value}")</p>
+@*                <p class="list-group-item-text" asp-format="{0:yyyy-MM-dd}">@item.AddDate - @item.CompletedDate.Value</p>*@
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    <script type="text/javascript">
+        $(function () {
+            $('#new-task-textinput').focus();
+        });
+    </script>
+}

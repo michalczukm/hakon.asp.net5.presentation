@@ -1,0 +1,10 @@
+{
+  "AppSettings": {
+    "SiteTitle": "PizzaToDo"
+  },
+  "Data": {
+    "DefaultConnection": {
+      "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-PizzaToDo-deb2daa9-f2f3-4272-bec4-3620963a0d4e;Trusted_Connection=True;MultipleActiveResultSets=true"
+    }
+  }
+}
