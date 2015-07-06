@@ -1,15 +1,13 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNet.Builder;
+﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using PizzaToDo.Middleware;
 using PizzaToDo.Models;
 using PizzaToDo.Services;
 
@@ -92,18 +90,18 @@ namespace PizzaToDo
             // Add cookie-based authentication to the request pipeline.
             app.UseIdentity();
 
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.HasFormContentType && context.Request.Form.Any() && context.Request.Form.Select(pair => string.Join(" ", pair.Value)).Contains("hack"))
-                {
-                    context.Response.ContentType = "text/html";
-                    context.Response.Redirect("/Home/Badass");
-                }
+//            app.Use(async (context, next) =>
+//            {
+//                if (context.Request.HasFormContentType && context.Request.Form.Any() && context.Request.Form.Select(pair => string.Join(" ", pair.Value)).Contains("hack"))
+//                {
+//                    context.Response.ContentType = "text/html";
+//                    context.Response.Redirect("/Home/Badass");
+//                }
+//
+//                await next();
+//            });
 
-                await next();
-            });
-
-
+            app.UseBadass();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
