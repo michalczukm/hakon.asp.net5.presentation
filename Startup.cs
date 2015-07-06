@@ -1,15 +1,11 @@
 ﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
-using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using PizzaToDo.Controllers.Helpers;
 using PizzaToDo.Middleware;
-using PizzaToDo.Models;
 using PizzaToDo.Services;
 
 namespace PizzaToDo
@@ -41,20 +37,8 @@ namespace PizzaToDo
             // Add Application settings to the services container.
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
 
-            // Add EF services to the services container.
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-
             services.AddSingleton<ITasksService, TasksService>();
             services.AddSingleton<ITasksDisjoiner, TasksDisjoiner>();
-
-            // Add Identity services to the services container.
-            services
-                .AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
 
             // Add MVC services to the services container.
             services.AddMvc();
@@ -77,7 +61,6 @@ namespace PizzaToDo
             {
                 app.UseBrowserLink();
                 app.UseErrorPage(ErrorPageOptions.ShowAll);
-                app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }
             else
             {
@@ -88,20 +71,6 @@ namespace PizzaToDo
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
-
-            // Add cookie-based authentication to the request pipeline.
-            app.UseIdentity();
-
-//            app.Use(async (context, next) =>
-//            {
-//                if (context.Request.HasFormContentType && context.Request.Form.Any() && context.Request.Form.Select(pair => string.Join(" ", pair.Value)).Contains("hack"))
-//                {
-//                    context.Response.ContentType = "text/html";
-//                    context.Response.Redirect("/Home/Badass");
-//                }
-//
-//                await next();
-//            });
 
             app.UseBadass();
 
