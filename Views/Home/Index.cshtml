@@ -1,4 +1,7 @@
-﻿@model PizzaToDo.Controllers.ViewModels.TasksListViewModel
+﻿@using PizzaToDo.Controllers.Helpers
+
+@inject ITasksDisjoiner TasksDisjoiner
+@model PizzaToDo.Controllers.ViewModels.TasksListViewModel
 @{
     ViewBag.Title = "Pizza 2015";
 }
@@ -23,7 +26,7 @@
 
 <div class="row">
     <div class="list-group">
-        @foreach (var item in Model.ToDoElements.Where(task => !task.CompletedDate.HasValue))
+        @foreach (var item in TasksDisjoiner.GetToDoFrom(Model.ToDoElements))
         {
             <div class="list-group-item">
                 <form asp-controller="Tasks" asp-action="Delete" method="POST" asp-route-id="@item.Id" asp-anti-forgery="true" class="badge"
@@ -50,7 +53,7 @@
 
 <div class="row">
     <div class="list-group">
-        @foreach (var item in Model.ToDoElements.Where(task => task.CompletedDate.HasValue))
+        @foreach (var item in TasksDisjoiner.GetCompletedFrom(Model.ToDoElements))
         {
             <div class="list-group-item disabled">
                 <form asp-controller="Tasks" asp-action="Delete" method="POST" asp-route-id="@item.Id" asp-anti-forgery="true" class="badge"

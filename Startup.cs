@@ -7,6 +7,7 @@ using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using PizzaToDo.Controllers.Helpers;
 using PizzaToDo.Middleware;
 using PizzaToDo.Models;
 using PizzaToDo.Services;
@@ -47,6 +48,7 @@ namespace PizzaToDo
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
             services.AddSingleton<ITasksService, TasksService>();
+            services.AddSingleton<ITasksDisjoiner, TasksDisjoiner>();
 
             // Add Identity services to the services container.
             services
